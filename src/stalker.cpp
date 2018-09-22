@@ -37,6 +37,25 @@ int main ( int argc, char* argv[] )
                           ( (char*) "user_information", true     , true );
                           //        topic name,         publish, subscribe
 
+                   dds_io<response,
+                          responseSeq,
+                          responseTypeSupport_var,
+                          responseTypeSupport,
+                          responseDataWriter_var,
+                          responseDataWriter,
+                          responseDataReader_var,
+                          responseDataReader> Response = 
+                   dds_io<response,
+                          responseSeq,
+                          responseTypeSupport_var,
+                          responseTypeSupport,
+                          responseDataWriter_var,
+                          responseDataWriter,
+                          responseDataReader_var,
+                          responseDataReader>
+                          ( (char*) "response", true     , true );
+                          //        topic name,         publish, subscribe
+
    TSN::user_information D;
    D.first_name = DDS::string_dup("MSFT");
    while (1)
@@ -50,11 +69,19 @@ int main ( int argc, char* argv[] )
       D.first_name = DDS::string_dup("AAA");
       UserInfo.publish ( D );
       sleep(1);
-      std::vector<TSN::user_information> V = UserInfo.recv ();
+      {
+         std::vector<TSN::user_information> V = UserInfo.recv ();
+         std::cout << "the size is " << V.size() << std::endl;
+         for (unsigned int i=0;i<V.size();i++)
+         {
+            std::cout << i << "  " << V[i].first_name << std::endl;
+         }
+      }
+      std::vector<TSN::response> V = Response.recv ();
       std::cout << "the size is " << V.size() << std::endl;
       for (unsigned int i=0;i<V.size();i++)
       {
-         std::cout << i << "  " << V[i].first_name << std::endl;
+         std::cout << i << "  " << V[i].uuid << std::endl;
       }
 
    }
