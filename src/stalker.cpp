@@ -52,7 +52,7 @@ int main ( int argc, char* argv[] )
       sleep(1);
       std::vector<TSN::user_information> V = UserInfo.recv ();
       std::cout << "the size is " << V.size() << std::endl;
-      for (auto i=0;i<V.size();i++)
+      for (unsigned int i=0;i<V.size();i++)
       {
          std::cout << i << "  " << V[i].first_name << std::endl;
       }
