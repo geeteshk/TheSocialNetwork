@@ -37,13 +37,26 @@ int main ( int argc, char* argv[] )
                           ( (char*) "user_information", true     , true );
                           //        topic name,         publish, subscribe
 
+   TSN::user_information D;
+   D.first_name = DDS::string_dup("MSFT");
    while (1)
    {
-      TSN::user_information D;
+      D.first_name = DDS::string_dup("MSFT");
+      UserInfo.publish ( D );
+      sleep(1);
+      // this sleep says there is either a history depth of one
+      // or the instances are not being done correctly.
+      // will investigate shortly.
+      D.first_name = DDS::string_dup("AAA");
       UserInfo.publish ( D );
       sleep(1);
       std::vector<TSN::user_information> V = UserInfo.recv ();
       std::cout << "the size is " << V.size() << std::endl;
+      for (auto i=0;i<V.size();i++)
+      {
+         std::cout << i << "  " << V[i].first_name << std::endl;
+      }
+
    }
    return 0;
 }
