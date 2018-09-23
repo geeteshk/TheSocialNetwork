@@ -49,7 +49,6 @@ class read_listener: public virtual DDS::DataReaderListener
             {
                //_cb ( msgList[i] );
                incoming_list.push_back (msgList[i]);
-               std::cout << "i have recieved something" << std::endl;
             }
          }
          status = m_Reader->return_loan(msgList, infoSeq);
