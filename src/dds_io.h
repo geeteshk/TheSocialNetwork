@@ -2,6 +2,7 @@
 #include <sstream>
 #include <iostream>
 //#include <functional>
+#include <mutex>
 #include <vector>
 
 
@@ -21,6 +22,7 @@ class read_listener: public virtual DDS::DataReaderListener
 {
   private:
      std::vector<MSG> incoming_list;
+     std::mutex incoming_list_lock;
   public:
      DATA_READER_VAR m_Reader;
      read_listener ()
@@ -28,9 +30,11 @@ class read_listener: public virtual DDS::DataReaderListener
      }
      std::vector<MSG>  recv ()
      {
+         incoming_list_lock.lock();
          std::vector<MSG> retval;
          retval = incoming_list;
          incoming_list.clear ();
+         incoming_list_lock.unlock();
          return retval;
      }
      /* Callback method implementation. */
@@ -48,7 +52,9 @@ class read_listener: public virtual DDS::DataReaderListener
             if (msgList.length()>0) // you can get callback with no actual data payload
             {
                //_cb ( msgList[i] );
+               incoming_list_lock.lock();
                incoming_list.push_back (msgList[i]);
+               incoming_list_lock.unlock();
             }
          }
          status = m_Reader->return_loan(msgList, infoSeq);
