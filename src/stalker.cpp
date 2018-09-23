@@ -47,18 +47,34 @@ void print ( TSN::user_information D )
        std::cout << "(" << D.interests[i] << ") "; 
    }
    std::cout << std::endl;
+   std::cout << std::endl;
 }
 
 void print ( TSN::response D )
 {
    print_time ();
-   std::cout << "Received :" << std::endl;
+   std::cout << "Received : response" << std::endl;
+   std::cout << "               " << D.uuid  << " "
+                                  << D.post_id  << " "
+                                  << D.post_body << " "
+                                  << D.date_of_creation << std::endl;
+   std::cout << std::endl;
 }
 
 void print ( TSN::request D )
 {
    print_time ();
-   std::cout << "Received :" << std::endl;
+   std::cout << "Received : request" << std::endl;
+   std::cout << "               " << D.uuid  << std::endl;
+   for (unsigned int i=0;i<D.user_requests.length ();i++)
+   {
+      std::cout << "                 uuid    " << D.user_requests[i].fulfiller_uuid << std::endl;
+      for (unsigned int j=0;j<D.user_requests[i].requested_posts.length ();j++)
+      {
+          std::cout << "                 posts   " << D.user_requests[i].requested_posts[j] << std::endl;
+      }
+   }
+   std::cout << std::endl;
 }
 
 #ifdef MAKE_TEST_DATA
@@ -99,12 +115,34 @@ TSN::user_information test_data_user_information ()
 TSN::response test_data_response () 
 {
    TSN::response D;
+   static int count=0;
+   count++;
+   std::string  uuid = "d21633d5-12fb-4c93-a4a4-a56f06b7ba24";
+   strncpy (D.uuid,uuid.c_str(),sizeof(D.uuid));
+   D.uuid[sizeof(D.uuid)-1] = '\0';
+   D.post_id = count;
+   D.post_body = DDS::string_dup("this is a sample post....."); 
+   D.date_of_creation = 1000;
    return D;
 }
 
 TSN::request test_data_request ()
 {
    TSN::request D;
+   std::string  uuid = "d21633d5-12fb-4c93-a4a4-a56f06b7ba24";
+   strncpy (D.uuid,uuid.c_str(),sizeof(D.uuid));
+   D.uuid[sizeof(D.uuid)-1] = '\0';
+
+   D.user_requests.length(1);
+
+   std::string uuid2 = "924741ba-5eee-4db9-90fc-ea0175fd5686";
+   strncpy(D.user_requests[0].fulfiller_uuid,uuid2.c_str(),sizeof(D.user_requests[0].fulfiller_uuid));
+   D.user_requests[0].fulfiller_uuid[sizeof(D.user_requests[0].fulfiller_uuid)-1] = '\0';
+
+   D.user_requests[0].requested_posts.length(2);
+   D.user_requests[0].requested_posts[0]=600;
+   D.user_requests[0].requested_posts[1]=700;
+
    return D;
 }
 #endif
@@ -194,9 +232,10 @@ int main ( int argc, char* argv[] )
       count++;
       if (count%10 == 0 )
       {
+         // just 3 different kinds of data...
          UserInfo.publish ( test_data_user_information () );
-         //Request.publish  ( test_data_request () );
-         //Response.publish ( test_data_response () );
+         Request.publish  ( test_data_request () );
+         Response.publish ( test_data_response () );
       }
 #endif
       {
@@ -222,13 +261,6 @@ int main ( int argc, char* argv[] )
       }
       usleep(100000); // 1/10 of a second
    }
-#ifdef XX
-      D.first_name = DDS::string_dup("MSFT");
-      UserInfo.publish ( D );
-      sleep(1);
-      D.first_name = DDS::string_dup("AAA");
-      UserInfo.publish ( D );
-   }
-#endif
+
    return 0;
 }
