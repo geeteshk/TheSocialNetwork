@@ -156,14 +156,7 @@ int main ( int argc, char* argv[] )
    // and what it takes to make a c++ generic.
 
 
-                   dds_io<user_information,
-                          user_informationSeq,
-                          user_informationTypeSupport_var,
-                          user_informationTypeSupport,
-                          user_informationDataWriter_var,
-                          user_informationDataWriter,
-                          user_informationDataReader_var,
-                          user_informationDataReader> UserInfo = 
+                          auto UserInfo = 
                    dds_io<user_information,
                           user_informationSeq,
                           user_informationTypeSupport_var,
@@ -179,14 +172,7 @@ int main ( int argc, char* argv[] )
 #endif
                           //        topic name,         publish, subscribe
 
-                   dds_io<response,
-                          responseSeq,
-                          responseTypeSupport_var,
-                          responseTypeSupport,
-                          responseDataWriter_var,
-                          responseDataWriter,
-                          responseDataReader_var,
-                          responseDataReader> Response = 
+                          auto Response = 
                    dds_io<response,
                           responseSeq,
                           responseTypeSupport_var,
@@ -202,14 +188,7 @@ int main ( int argc, char* argv[] )
 #endif
                           //        topic name,         publish, subscribe
 
-                   dds_io<request,
-                          requestSeq,
-                          requestTypeSupport_var,
-                          requestTypeSupport,
-                          requestDataWriter_var,
-                          requestDataWriter,
-                          requestDataReader_var,
-                          requestDataReader> Request = 
+                          auto Request = 
                    dds_io<request,
                           requestSeq,
                           requestTypeSupport_var,
