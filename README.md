@@ -37,6 +37,3 @@ Then CCCCC sends out a request
 
 
 
-:wq
-
-
