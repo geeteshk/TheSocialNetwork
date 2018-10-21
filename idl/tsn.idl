@@ -81,8 +81,8 @@ module TSN
         string message_body;
         long date_of_creation;          // When message was made in seconds since 1/1/1970
     };
-    #pragma keylist private_message uuid
-    #pragma cats private_message uuid
+    #pragma keylist private_message receiver_uuid
+    #pragma cats private_message receiver_uuid
     
     /* The participant is "", like
           mgr.createParticipant("");"
