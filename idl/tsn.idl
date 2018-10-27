@@ -68,6 +68,9 @@ module TSN
         
         char parent_uuid[UUID_SIZE];        // UUID and serial of parent post, if applicable
         serial_number parent_post_id;
+
+        sequence<string> children_uuids;            // All children UUID and correspond serials, if applicable
+        sequence<serial_number> children_post_ids;
     };
     #pragma keylist response uuid
     #pragma cats response uuid
